@@ -1,0 +1,23 @@
+{
+  "numero": "000124",
+  "serie": "1",
+  "data_emissao": "2026-09-10",
+  "emitente": {
+    "cnpj": "11222333000181",
+    "razao_social": "Empresa Exemplo LTDA"
+  },
+  "destinatario": {
+    "documento": "11111111111",
+    "nome": "Cliente Com CPF Invalido"
+  },
+  "itens": [
+    {
+      "descricao": "Produto A",
+      "quantidade": 1,
+      "valor_unitario": 50.00,
+      "aliquota_icms": 0.18
+    }
+  ],
+  "valor_total_declarado": 50.00,
+  "autorizacao_especial": false
+}
