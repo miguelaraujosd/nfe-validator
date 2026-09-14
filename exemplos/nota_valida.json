@@ -1,0 +1,23 @@
+{
+  "numero": "000123",
+  "serie": "1",
+  "data_emissao": "2026-09-10",
+  "emitente": {
+    "cnpj": "11222333000181",
+    "razao_social": "Empresa Exemplo LTDA"
+  },
+  "destinatario": {
+    "documento": "52998224725",
+    "nome": "Cliente Exemplo"
+  },
+  "itens": [
+    {
+      "descricao": "Produto A",
+      "quantidade": 2,
+      "valor_unitario": 50.00,
+      "aliquota_icms": 0.18
+    }
+  ],
+  "valor_total_declarado": 100.00,
+  "autorizacao_especial": false
+}
