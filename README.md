@@ -98,5 +98,5 @@ padronizado, com print/screenshot como evidência).
 
 | Nome completo | RA |
 |---------------|----|
-| (preencher) | (preencher) |
-| (preencher) | (preencher) |
+| Miguel Henrique Araujo Dutra | 22306726|
+
