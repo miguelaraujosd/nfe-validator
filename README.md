@@ -100,3 +100,30 @@ padronizado, com print/screenshot como evidência).
 |---------------|----|
 | Miguel Henrique Araujo Dutra| 22306726 |
 
+## 9. Entrega 2 — Documentação Adicional
+
+Esta seção reúne os artefatos produzidos na etapa intermediária do
+projeto (publicação, refinamento e análise crítica do uso de IA):
+
+- **Diagrama de fluxo da aplicação:** [`docs/DIAGRAMA_FLUXO.md`](docs/DIAGRAMA_FLUXO.md)
+- **Relato de experiência da equipe:** [`docs/RELATO_EXPERIENCIA.md`](docs/RELATO_EXPERIENCIA.md)
+- **Análise comparativa de ferramentas de IA e discussão ética:** [`docs/ANALISE_IA.md`](docs/ANALISE_IA.md)
+- **ADRs adicionais (uso de IA e evidência de testes):** [`docs/ADR_ADICIONAL.md`](docs/ADR_ADICIONAL.md)
+
+### Governança da Entrega 2
+
+- Todo código foi gerado com apoio do agente Claude Code, seguindo o
+  fluxo Spec-Driven Development descrito em `SPEC.md` e nas regras de
+  contexto em `.claude/CLAUDE.md`.
+- Toda alteração no projeto passou pelo fluxo de branch protegida
+  (`main`) + Pull Request antes do merge, conforme histórico de commits
+  e Pull Requests visível na aba correspondente do repositório no
+  GitHub.
+- Erros lógicos identificados durante o desenvolvimento (ex: bug de
+  arredondamento de ponto flutuante na regra RN01) e o respectivo ciclo
+  de correção estão documentados em `docs/TEST_REPORT.md`.
+- Situações em que a especificação original precisou ser ajustada com
+  base em testes (ex: adição da regra RN03 após identificação de uma
+  lacuna) estão registradas em `SPEC.md`, seção 7 — Histórico de
+  Refinamento.
+
