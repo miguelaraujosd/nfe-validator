@@ -1,129 +1,107 @@
 # NFe Validator — Validador/Parser de Notas Fiscais
 
-## 1. Visão Geral
+Versão **v1.0.0** · Python 3.11 · 40 testes · 99% de cobertura
 
-Este projeto implementa um serviço que recebe dados estruturados de uma Nota
-Fiscal (JSON) e os valida contra um conjunto de regras de negócio (campos
-obrigatórios, formatos, faixas de valores e cálculo de impostos). O objetivo
-não é substituir a validação oficial da SEFAZ, e sim simular, em escopo
-reduzido e didático, um motor de regras de negócio testável — usado aqui como
-estudo de caso para o fluxo **SDD (Spec-Driven Development)**.
+Serviço (via linha de comando) que recebe uma Nota Fiscal em JSON e valida
+contra regras de negócio: campos obrigatórios, CPF/CNPJ, cálculo de total e
+ICMS, limite de valor e data de emissão. Desenvolvido com o fluxo
+**Spec-Driven Development (SDD)** usando o Claude Code como agente de apoio.
+Não substitui a validação oficial da SEFAZ; é um estudo de caso didático.
 
-O desenvolvimento seguiu o fluxo:
+## Início rápido
 
-```
-Especificação (SPEC.md) → Geração assistida por IA (Claude Code) → Testes → Refinamento da spec → Nova geração
-```
-
-## 2. Arquitetura (resumo)
-
-```
-nfe-validator/
-├── SPEC.md                  # Especificação técnica (fonte da verdade)
-├── docs/
-│   └── ADR.md                # Registro de decisões arquiteturais
-├── .claude/
-│   └── CLAUDE.md              # Regras/contexto dados ao agente de IA
-├── src/nfe_validator/
-│   ├── models.py              # Estruturas de dados (NotaFiscal, Item, etc.)
-│   └── validator.py           # Motor de regras de validação
-├── tests/
-│   └── test_validator.py      # Suíte de testes (casos normais + edge cases)
-├── Dockerfile
-├── docker-compose.yml
-└── requirements.txt
-```
-
-Ver `docs/ADR.md` para o racional de cada decisão técnica.
-
-## 3. Como instalar e executar
-
-### Opção A — Docker (recomendado, ambiente padronizado)
+### Opção A — Docker (ambiente padronizado, comando único)
 
 ```bash
-docker compose build
-docker compose run --rm app pytest -v
+docker compose up --build test
 ```
 
-### Opção B — Localmente
+Sobe o ambiente, executa os 40 testes e imprime o relatório de cobertura.
+
+Para validar uma nota:
+
+```bash
+docker compose run --rm app exemplos/nota_valida.json
+docker compose run --rm app exemplos/nota_cpf_invalido.json
+```
+
+### Opção B — Local (sem Docker)
+
+Requisitos: Python 3.11 ou superior.
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+# Windows (PowerShell):  .venv\Scripts\Activate.ps1
+# Linux/macOS:           source .venv/bin/activate
 pip install -r requirements.txt
-pytest -v
 ```
 
-### Rodando o validador manualmente
+Variável de ambiente necessária (apenas indica onde está o código-fonte):
+
+```bash
+# Windows (PowerShell):  $env:PYTHONPATH = "src"
+# Linux/macOS:           export PYTHONPATH=src
+```
+
+Executar os testes com cobertura:
+
+```bash
+pytest -v --cov=src/nfe_validator --cov-report=term-missing
+```
+
+Validar uma nota pelo CLI (no Windows, o comando pode ser `py` em vez de `python`):
 
 ```bash
 python -m nfe_validator.cli exemplos/nota_valida.json
 ```
 
-## 4. Fluxo de trabalho do time (governança)
+O programa imprime o resultado em JSON e encerra com código `0` (nota válida)
+ou `1` (nota inválida).
 
-- `main`: código estável, protegido (merge apenas via Pull Request aprovado).
-- `develop`: integração das features antes de ir para `main`.
-- `feature/<nome-da-tarefa>`: uma branch por tarefa/issue.
-- Toda tarefa é uma Issue vinculada ao GitHub Project (quadro Kanban).
-- Todo merge exige ao menos 1 revisão (Pull Request Review) de outro membro.
+## Configuração
 
-## 5. Agentes de IA utilizados
+O projeto não usa credenciais, chaves de API nem banco de dados. A única
+variável de ambiente é `PYTHONPATH=src`, já definida no `Dockerfile` e no
+`docker-compose.yml`.
 
-- **Ferramenta:** Claude Code, orientado pelas regras em `.claude/CLAUDE.md`.
-- **Uso documentado:** o agente foi usado para (a) gerar o esqueleto do
-  módulo `validator.py` a partir da `SPEC.md`, (b) gerar casos de teste a
-  partir das regras de negócio descritas na especificação, e (c) revisar
-  edge cases não cobertos originalmente na spec (ver seção "Refinamento" em
-  `SPEC.md`).
+## Arquitetura
 
-## 6. Registro Sintético de Decisões Arquiteturais (ADR)
+```
+src/nfe_validator/
+├── models.py     estruturas de dados (dataclasses)
+├── validator.py  regras de negócio (funções puras)
+└── cli.py        interface de linha de comando
+```
 
-Ver detalhes completos em `docs/ADR.md`. Resumo:
+Fluxo da aplicação (detalhes em [`docs/DIAGRAMA_FLUXO.md`](docs/DIAGRAMA_FLUXO.md)):
 
-| ADR | Decisão | Motivo |
-|-----|---------|--------|
-| 001 | Python + pytest | Simplicidade, rapidez de escrita de testes, boa integração com agentes de IA |
-| 002 | Regras de negócio como funções puras | Facilita testes unitários isolados e geração incremental via IA |
-| 003 | Sem banco de dados | Escopo do problema não exige persistência; validação é stateless |
-| 004 | Docker para padronização de ambiente | Garantir que "funciona na minha máquina" não seja um problema entre os membros do time |
+```
+JSON da nota -> campos obrigatórios -> cálculo de totais -> regras RN01/RN03/RN04/RN05 -> resultado {valido, erros, valor_calculado, icms_total}
+```
 
-## 7. Relatório de Execução dos Testes
+## Documentação
 
-Ver `docs/TEST_REPORT.md` para o log de execução mais recente da suíte de
-testes (cole aqui o output de `pytest -v` depois de rodar no ambiente
-padronizado, com print/screenshot como evidência).
+| Documento | Conteúdo |
+|---|---|
+| [`SPEC.md`](SPEC.md) | Especificação de trabalho (Entregas 1 e 2) |
+| [`docs/SPEC_AS_BUILT.md`](docs/SPEC_AS_BUILT.md) | Especificação definitiva (As-Built) da v1.0.0 |
+| [`docs/ADR.md`](docs/ADR.md), [`docs/ADR_ADICIONAL.md`](docs/ADR_ADICIONAL.md) | Decisões de arquitetura |
+| [`docs/TEST_REPORT.md`](docs/TEST_REPORT.md) | Histórico de testes e bug de arredondamento corrigido |
+| [`docs/COVERAGE_REPORT.md`](docs/COVERAGE_REPORT.md) | Relatório de cobertura (99%) |
+| [`docs/ANALISE_IA.md`](docs/ANALISE_IA.md) | Comparativo de ferramentas de IA e análise ética |
+| [`docs/RELATO_EXPERIENCIA.md`](docs/RELATO_EXPERIENCIA.md) | Relato de experiência do grupo |
+| [`docs/RETROSPECTIVA_FINAL.md`](docs/RETROSPECTIVA_FINAL.md) | Retrospectiva e lições aprendidas |
 
-## 8. Equipe
+## Governança
+
+- `main`: protegida, só recebe código via Pull Request.
+- `develop`: integração. `feature/*`: uma branch por tarefa.
+- Tarefas registradas como Issues e organizadas no GitHub Projects (board Kanban).
+- Instruções de contexto do agente de IA: [`.claude/CLAUDE.md`](.claude/CLAUDE.md).
+
+## Equipe
 
 | Nome completo | RA |
-|---------------|----|
-| Miguel Henrique Araujo Dutra| 22306726 |
-
-## 9. Entrega 2 — Documentação Adicional
-
-Esta seção reúne os artefatos produzidos na etapa intermediária do
-projeto (publicação, refinamento e análise crítica do uso de IA):
-
-- **Diagrama de fluxo da aplicação:** [`docs/DIAGRAMA_FLUXO.md`](docs/DIAGRAMA_FLUXO.md)
-- **Relato de experiência da equipe:** [`docs/RELATO_EXPERIENCIA.md`](docs/RELATO_EXPERIENCIA.md)
-- **Análise comparativa de ferramentas de IA e discussão ética:** [`docs/ANALISE_IA.md`](docs/ANALISE_IA.md)
-- **ADRs adicionais (uso de IA e evidência de testes):** [`docs/ADR_ADICIONAL.md`](docs/ADR_ADICIONAL.md)
-
-### Governança da Entrega 2
-
-- Todo código foi gerado com apoio do agente Claude Code, seguindo o
-  fluxo Spec-Driven Development descrito em `SPEC.md` e nas regras de
-  contexto em `.claude/CLAUDE.md`.
-- Toda alteração no projeto passou pelo fluxo de branch protegida
-  (`main`) + Pull Request antes do merge, conforme histórico de commits
-  e Pull Requests visível na aba correspondente do repositório no
-  GitHub.
-- Erros lógicos identificados durante o desenvolvimento (ex: bug de
-  arredondamento de ponto flutuante na regra RN01) e o respectivo ciclo
-  de correção estão documentados em `docs/TEST_REPORT.md`.
-- Situações em que a especificação original precisou ser ajustada com
-  base em testes (ex: adição da regra RN03 após identificação de uma
-  lacuna) estão registradas em `SPEC.md`, seção 7 — Histórico de
-  Refinamento.
-
+|---|---|
+| Miguel Henrique Araujo Dutra | 22306726 |
+| (adicionar demais integrantes) | |

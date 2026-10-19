@@ -1,0 +1,23 @@
+{
+  "numero": "000125",
+  "serie": "1",
+  "data_emissao": "2026-09-10",
+  "emitente": {
+    "cnpj": "11222333000181",
+    "razao_social": "Empresa Exemplo LTDA"
+  },
+  "destinatario": {
+    "documento": "52998224725",
+    "nome": "Cliente Exemplo"
+  },
+  "itens": [
+    {
+      "descricao": "Lote de Equipamentos",
+      "quantidade": 1000,
+      "valor_unitario": 100.01,
+      "aliquota_icms": 0.18
+    }
+  ],
+  "valor_total_declarado": 100010.00,
+  "autorizacao_especial": false
+}

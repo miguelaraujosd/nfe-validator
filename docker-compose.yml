@@ -1,9 +1,15 @@
 services:
-  app:
+  # Harness de testes + cobertura:  docker compose up --build test
+  test:
     build: .
-    volumes:
-      - ./src:/app/src
-      - ./tests:/app/tests
     environment:
       - PYTHONPATH=/app/src
-    command: pytest -v
+    command: pytest -v --cov=src/nfe_validator --cov-report=term-missing
+
+  # Aplicação (validador via CLI):
+  #   docker compose run --rm app exemplos/nota_valida.json
+  app:
+    build: .
+    environment:
+      - PYTHONPATH=/app/src
+    entrypoint: ["python", "-m", "nfe_validator.cli"]

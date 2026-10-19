@@ -9,4 +9,5 @@ COPY . .
 
 ENV PYTHONPATH=/app/src
 
-CMD ["pytest", "-v"]
+# Comando padrão: roda o harness de testes com relatório de cobertura
+CMD ["pytest", "-v", "--cov=src/nfe_validator", "--cov-report=term-missing"]
