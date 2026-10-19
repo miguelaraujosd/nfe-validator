@@ -1,43 +1,48 @@
 # Relatório de Cobertura de Código (Coverage)
 
-**Comando executado:**
+**Comando executado** (na raiz do projeto):
+
 ```
-pytest -v --cov=src/nfe_validator --cov-report=term-missing
+PYTHONPATH=src pytest -v --cov=src/nfe_validator --cov-report=term-missing
 ```
 
-**Resultado consolidado:** 22 testes, 22 aprovados. **Cobertura total: 95%.**
+**Resultado:** 40 testes, 40 aprovados, 0 falhas. **Cobertura total: 99%.**
 
 ```
 Name                             Stmts   Miss  Cover   Missing
 --------------------------------------------------------------
 src/nfe_validator/__init__.py        0      0   100%
-src/nfe_validator/models.py         39      1    97%   53
-src/nfe_validator/validator.py      94      6    94%   36, 57, 87, 125-126, 131
+src/nfe_validator/cli.py            21      1    95%   41
+src/nfe_validator/models.py         39      0   100%
+src/nfe_validator/validator.py      94      0   100%
 --------------------------------------------------------------
-TOTAL                               133      7    95%
-============================== 22 passed in 0.12s ==============================
+TOTAL                              154      1    99%
+============================== 40 passed in 0.19s ==============================
 ```
 
-## Análise das linhas não cobertas
+O log completo da execução está em `docs/coverage_output.txt`.
 
-- `models.py`, linha 53: linha do método utilitário `to_dict()` referente a
-  um caminho auxiliar de serialização não exercitado diretamente pelos
-  testes unitários (é exercitado indiretamente pelo CLI, mas não possui
-  teste automatizado dedicado).
-- `validator.py`, linhas 36, 57: ramos internos das funções auxiliares de
-  cálculo de dígito verificador de CPF/CNPJ (`_digito_verificador_cpf` e
-  `_digito_verificador_cnpj`) que tratam o caso específico de resto igual a
-  10 no cálculo do dígito — coberto indiretamente, mas sem um teste que
-  force exatamente esse resto.
-- `validator.py`, linhas 87, 125-126, 131: ramos de tratamento de exceção
-  (`try/except`) para entradas malformadas de data, e o bloco de
-  orquestração final da função `validar_nota_fiscal` quando `numero` ou
-  `itens` estão ausentes (nesse caso a validação de regras de negócio é
-  pulada por decisão de design, então o "miss" é esperado).
+## Evolução da cobertura (registro honesto)
 
-## Meta de cobertura e justificativa
+| Medição | Testes | Cobertura | Observação |
+|---|---|---|---|
+| 1ª medição | 22 | 82% | Com o `cli.py` incluído, a suíte inicial deixava 28 instruções sem cobertura (CLI inteiro, ramos de erro de data, documento e descrição). |
+| Medição final | 40 | 99% | Adicionados 18 testes em `tests/test_extra.py` cobrindo cada ramo descoberto. |
 
-O time considera 95% um resultado satisfatório para este projeto: as
-linhas não cobertas são majoritariamente ramos defensivos (tratamento de
-erro) e não caminhos de regra de negócio crítica, todos os quais possuem
-cobertura completa (RN01–RN05, 100% exercitadas pelos 22 testes).
+Uma medição intermediária de 95% chegou a ser relatada informalmente, mas foi
+feita sobre uma cópia do projeto sem o `cli.py`, portanto não representava o
+código entregue. O número válido é o da tabela acima.
+
+## Linha não coberta
+
+- `cli.py`, linha 41: a chamada `main()` dentro do bloco
+  `if __name__ == "__main__":`. Essa linha só executa quando o módulo é rodado
+  como script (`python -m nfe_validator.cli`); os testes chamam `main()`
+  diretamente, e o fluxo de ponta a ponta foi exercitado manualmente nos
+  exemplos da pasta `exemplos/`.
+
+## Cobertura por regra de negócio
+
+Todas as regras (RN01 a RN05), a validação de campos obrigatórios e a
+serialização do resultado (`to_dict`) estão com 100% das linhas exercitadas
+por testes automatizados.

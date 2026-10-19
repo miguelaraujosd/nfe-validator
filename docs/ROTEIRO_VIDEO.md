@@ -27,7 +27,7 @@ Depois de gravar, suba no YouTube (pode ser "não listado"), Google Drive
 **[1:15 – 2:30] Demonstração funcional (a parte mais importante)**
 - Abra o terminal, rode:
   ```
-  python -m nfe_validator.cli exemplos/nota_valida.json
+  python -m nfe_validator.cli exemplos/nota_valida.json   (no Windows pode ser: py -m nfe_validator.cli ...)
   ```
   mostre o resultado `"valido": true`.
 - Depois rode com um exemplo inválido:
@@ -44,9 +44,9 @@ Depois de gravar, suba no YouTube (pode ser "não listado"), Google Drive
   ```
   pytest -v --cov=src/nfe_validator --cov-report=term-missing
   ```
-- Deixe rodar até o final, mostrando `22 passed` e a cobertura de 95%.
-> "Nossa suíte tem 22 testes automatizados cobrindo casos normais e de
-> borda, com 100% de aprovação e 95% de cobertura de código."
+- Deixe rodar até o final, mostrando `40 passed` e a cobertura de 99%.
+> "Nossa suíte tem 40 testes automatizados cobrindo casos normais e de
+> borda, com 100% de aprovação e 99% de cobertura de código."
 
 **[3:30 – 4:15] Mostrar o repositório e a release**
 - Mostre a página do GitHub, a aba "Releases" com a tag `v1.0.0`.

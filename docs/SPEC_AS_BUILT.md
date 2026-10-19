@@ -102,11 +102,11 @@ ou uma categoria estrutural (`campo_obrigatorio`, `campo_invalido`). Este
 contrato é estável e não deve ser alterado sem versionamento maior
 (SemVer) do pacote.
 
-## 7. Ambiente de Execução (confirmado)
+## 7. Ambiente de Execução (definido)
 
 - Python 3.11 (imagem `python:3.11-slim` no Dockerfile)
 - Dependências: `pytest`, `pytest-cov` (ver `requirements.txt`)
-- Execução via Docker (`docker compose run --rm app pytest -v`) ou local
+- Execução via Docker (`docker compose up --build test`) ou local
   (`pip install -r requirements.txt && pytest -v`)
 
 ## 8. Divergências entre Spec Inicial e As-Built
@@ -115,7 +115,7 @@ contrato é estável e não deve ser alterado sem versionamento maior
 |---|---|---|---|
 | RN03 (limite de valor) | Não existia | Adicionada | Identificada como lacuna durante a escrita de testes de borda (Entrega 1, refinamento) |
 | Tolerância RN01 | Comparação direta de floats | Comparação com arredondamento explícito a 2 casas decimais | Bug de ponto flutuante identificado na primeira execução real dos testes |
-| Cobertura de testes | Não exigida formalmente | 95% de cobertura de código medida e documentada | Exigência formal da Entrega 3 |
+| Cobertura de testes | Não exigida formalmente | 99% de cobertura de código medida e documentada (40 testes) | Exigência formal da Entrega 3 |
 | Endpoint HTTP / múltiplas alíquotas | Propostos como itens futuros (board "To Do") | Não implementados nesta versão | Fora do escopo da versão 1.0.0; mantidos como backlog para versões futuras |
 
 Nenhuma outra divergência foi identificada entre o que foi especificado e

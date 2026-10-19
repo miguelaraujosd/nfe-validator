@@ -59,7 +59,7 @@ de especificação, não como uma decisão livre de implementação.
 O projeto **NFe Validator** foi concluído com sucesso, cumprindo o escopo
 definido na especificação original com pequenos ajustes justificados e
 documentados (ver `docs/SPEC_AS_BUILT.md`, seção 8). A suíte de testes
-automatizados atinge 100% de aprovação (22/22 testes) com 95% de
+automatizados atinge 100% de aprovação (40/40 testes) com 99% de
 cobertura de código. O repositório está publicado, versionado com a tag
 `v1.0.0`, e acompanhado de documentação técnica completa (especificação,
 ADRs, relatórios de teste e cobertura, e análise crítica do uso de
